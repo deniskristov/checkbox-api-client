@@ -11,6 +11,7 @@ import ua.in.checkbox.api.client.dto.shift.Shift;
 import ua.in.checkbox.api.client.dto.good.GoodModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptSellPayload;
+import ua.in.checkbox.api.client.dto.shift.ShiftWithCashRegisterModel;
 import ua.in.checkbox.api.client.dto.shift.ShiftWithCashierAndCashRegister;
 import ua.in.checkbox.api.client.utils.CheckboxApiCallException;
 
@@ -89,9 +90,9 @@ public class CheckboxApiClient
         return token != null;
     }
 
-    public Shift findShiftById(String id)
+    public ShiftWithCashierAndCashRegister findShiftById(String id)
     {
-        return getForObject(Shift.class, URI.create(apiPrefix + SHIFTS_END_POINT + "/" + id));
+        return getForObject(ShiftWithCashierAndCashRegister.class, URI.create(apiPrefix + SHIFTS_END_POINT + "/" + id));
     }
 
     public GoodModel findGoodById(String id)
@@ -122,6 +123,11 @@ public class CheckboxApiClient
             Optional.empty(),
             URI.create(apiPrefix + SHIFTS_END_POINT + "/close"),
             HttpURLConnection.HTTP_ACCEPTED);
+    }
+
+    public ShiftWithCashRegisterModel getCurrentShift()
+    {
+        return getForObject(ShiftWithCashRegisterModel.class, URI.create(apiPrefix + CASHIER_END_POINT + "/shift"));
     }
 
     public PaginatedResult<ShiftWithCashierAndCashRegister> getShifts()

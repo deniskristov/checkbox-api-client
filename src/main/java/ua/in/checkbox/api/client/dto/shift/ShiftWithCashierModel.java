@@ -1,18 +1,14 @@
 package ua.in.checkbox.api.client.dto.shift;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.ToString;
-import ua.in.checkbox.api.client.dto.CashRegisterModel;
 import ua.in.checkbox.api.client.dto.CashierModel;
 
 @Data
 @ToString(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ShiftWithCashierAndCashRegister extends Shift
+public class ShiftWithCashierModel extends Shift
 {
-    @JsonProperty("cash_register")
-    private CashRegisterModel cashRegister;
     private CashierModel cashier;
 }
