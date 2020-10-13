@@ -1,4 +1,4 @@
-package ua.in.checkbox.api.client.dto;
+package ua.in.checkbox.api.client.dto.cashier;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,24 +10,17 @@ import java.util.Date;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CashierModel
+public class OrganizationModel
 {
     private String id;
-    @JsonProperty("full_name")
-    private String fullName;
-    @JsonProperty("key_id")
-    private String keyId;
-    @JsonProperty("signature_type")
-    private SIGNATURE_TYPE signatureType;
+    private String title;
+    private String edrpou;
+    @JsonProperty("tax_number")
+    private String taxNumber;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConstants.DATE_NO_MILLIS_PATTERN)
     @JsonProperty("created_at")
     private Date createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConstants.DATE_NO_MILLIS_PATTERN)
     @JsonProperty("updated_at")
     private Date updatedAt;
-
-    public enum SIGNATURE_TYPE
-    {
-        AGENT
-    }
 }

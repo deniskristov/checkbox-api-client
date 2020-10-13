@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.ToString;
 import ua.in.checkbox.api.client.dto.CashRegisterModel;
-import ua.in.checkbox.api.client.dto.CashierModel;
+import ua.in.checkbox.api.client.dto.cashier.CashierModel;
 
 @Data
 @ToString(callSuper = true)

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import ua.in.checkbox.api.client.dto.Bearer;
 import ua.in.checkbox.api.client.dto.ErrorDetails;
 import ua.in.checkbox.api.client.dto.PaginatedResult;
+import ua.in.checkbox.api.client.dto.cashier.DetailedCashierModel;
 import ua.in.checkbox.api.client.dto.shift.Shift;
 import ua.in.checkbox.api.client.dto.good.GoodModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptModel;
@@ -78,9 +79,7 @@ public class CheckboxApiClient
         }
         catch (InterruptedException|IOException e)
         {
-            //TODO remove
-            e.printStackTrace();
-            log.error("API call error", e.getMessage());
+            log.error("API call error", e);
             throw CheckboxApiCallException.builder().build();
         }
     }
@@ -88,6 +87,11 @@ public class CheckboxApiClient
     public boolean isAuthorized()
     {
         return token != null;
+    }
+
+    public DetailedCashierModel me()
+    {
+        return getForObject(DetailedCashierModel.class, URI.create(apiPrefix + CASHIER_END_POINT + "/me"));
     }
 
     public ShiftWithCashierAndCashRegister findShiftById(String id)
@@ -172,9 +176,7 @@ public class CheckboxApiClient
         }
         catch (InterruptedException|IOException e)
         {
-            //TODO remove
-            e.printStackTrace();
-            log.error("API call error", e.getMessage());
+            log.error("API call error", e);
             throw CheckboxApiCallException.builder().build();
         }
     }
@@ -189,9 +191,7 @@ public class CheckboxApiClient
             }
             catch (JsonProcessingException e)
             {
-                //TODO remove
-                e.printStackTrace();
-                log.error("API call error", e.getMessage());
+                log.error("API call error", e);
                 throw CheckboxApiCallException.builder().build();
             }
         }, uri);
@@ -207,9 +207,7 @@ public class CheckboxApiClient
             }
             catch (JsonProcessingException e)
             {
-                //TODO remove
-                e.printStackTrace();
-                log.error("API call error", e.getMessage());
+                log.error("API call error", e);
                 throw CheckboxApiCallException.builder().build();
             }
         }, uri);
@@ -240,9 +238,7 @@ public class CheckboxApiClient
         }
         catch (InterruptedException|IOException e)
         {
-            //TODO remove
-            e.printStackTrace();
-            log.error("API call error", e.getMessage());
+            log.error("API call error", e);
             throw CheckboxApiCallException.builder().build();
         }
     }
