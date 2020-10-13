@@ -5,13 +5,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import ua.in.checkbox.api.client.dto.Bearer;
+import ua.in.checkbox.api.client.dto.Credentials;
 import ua.in.checkbox.api.client.dto.ErrorDetails;
 import ua.in.checkbox.api.client.dto.PaginatedResult;
 import ua.in.checkbox.api.client.dto.cashier.DetailedCashierModel;
-import ua.in.checkbox.api.client.dto.shift.Shift;
 import ua.in.checkbox.api.client.dto.good.GoodModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptSellPayload;
+import ua.in.checkbox.api.client.dto.receipt.ReceiptServicePayload;
 import ua.in.checkbox.api.client.dto.shift.ShiftWithCashRegisterModel;
 import ua.in.checkbox.api.client.dto.shift.ShiftWithCashierAndCashRegister;
 import ua.in.checkbox.api.client.utils.CheckboxApiCallException;
@@ -22,7 +23,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Optional;
 import java.util.function.Function;
 
 @Slf4j
@@ -35,10 +35,10 @@ public class CheckboxApiClient
     private static final String RECEIPTS_END_POINT = "/receipts";
 
     private String token;
-    private HttpClient httpClient = HttpClient.newHttpClient();;
-    private String apiPrefix;
-    private String login;
-    private String password;
+    private HttpClient httpClient = HttpClient.newHttpClient();
+    private final String apiPrefix;
+    private final String login;
+    private final String password;
     private ObjectMapper mapper = new ObjectMapper();
 
     public CheckboxApiClient(String login, String password, String apiUrl, int apiVersion)
@@ -52,13 +52,13 @@ public class CheckboxApiClient
     {
         try
         {
-            String json = new StringBuilder()
-                .append("{")
-                .append(String.format("\"login\":\"%s\",", login))
-                .append(String.format("\"password\":\"%s\"", password))
-                .append("}").toString();
+            Credentials credentials = Credentials.builder()
+                .login(login)
+                .password(password)
+                .build();
             HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .POST(HttpRequest.BodyPublishers.ofString(
+                    mapper.writeValueAsString(credentials)))
                 .uri(URI.create(apiPrefix + CASHIER_END_POINT + "/signin"))
                 .header("Content-Type", "application/json")
                 .build();
@@ -106,15 +106,21 @@ public class CheckboxApiClient
 
     public ReceiptModel sell(ReceiptSellPayload receipt)
     {
-        return postForObject(ReceiptModel.class, Optional.of(receipt),
+        return postForObject(ReceiptModel.class, receipt,
             URI.create(apiPrefix + RECEIPTS_END_POINT + "/sell"), HttpURLConnection.HTTP_CREATED);
+    }
+
+    public ReceiptModel service(ReceiptServicePayload receipt)
+    {
+        return postForObject(ReceiptModel.class, receipt,
+            URI.create(apiPrefix + RECEIPTS_END_POINT + "/service"), HttpURLConnection.HTTP_CREATED);
     }
 
     public ShiftWithCashierAndCashRegister openShift(String xLicenseKey)
     {
         return postForObject(
             ShiftWithCashierAndCashRegister.class,
-            Optional.empty(),
+            null,
             builder -> builder.header("X-License-Key", xLicenseKey),
             URI.create(apiPrefix + SHIFTS_END_POINT),
             HttpURLConnection.HTTP_ACCEPTED);
@@ -124,7 +130,6 @@ public class CheckboxApiClient
     {
         return postForObject(
             ShiftWithCashierAndCashRegister.class,
-            Optional.empty(),
             URI.create(apiPrefix + SHIFTS_END_POINT + "/close"),
             HttpURLConnection.HTTP_ACCEPTED);
     }
@@ -139,17 +144,22 @@ public class CheckboxApiClient
         return getForObject(new TypeReference<>(){}, URI.create(apiPrefix + SHIFTS_END_POINT));
     }
 
-    private <T> T postForObject(Class<T> returnType, Optional postData, URI uri, int successHttpCode)
+    private <T> T postForObject(Class<T> returnType,  URI uri, int successHttpCode)
+    {
+        return postForObject(returnType, null, null, uri, successHttpCode);
+    }
+
+    private <T> T postForObject(Class<T> returnType, Object postData, URI uri, int successHttpCode)
     {
         return postForObject(returnType, postData, null, uri, successHttpCode);
     }
 
-    private <T> T postForObject(Class<T> returnType, Optional postData, Function<HttpRequest.Builder,HttpRequest.Builder> httpRequestCustomBuilder, URI uri, int successHttpCode)
+    private <T> T postForObject(Class<T> returnType, Object postData, Function<HttpRequest.Builder,HttpRequest.Builder> httpRequestCustomBuilder, URI uri, int successHttpCode)
     {
         try
         {
-            HttpRequest.BodyPublisher publisher = postData.isPresent()
-                ? HttpRequest.BodyPublishers.ofString(mapper.writeValueAsString(postData.get()))
+            HttpRequest.BodyPublisher publisher = postData != null
+                ? HttpRequest.BodyPublishers.ofString(mapper.writeValueAsString(postData))
                 : HttpRequest.BodyPublishers.noBody();
             HttpRequest.Builder request = HttpRequest.newBuilder()
                 .POST(publisher)

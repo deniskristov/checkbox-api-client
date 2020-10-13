@@ -2,7 +2,6 @@ package ua.in.checkbox.api.client.dto.receipt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import ua.in.checkbox.api.client.dto.DeliveryPayload;
 import ua.in.checkbox.api.client.dto.good.GoodItemPayload;

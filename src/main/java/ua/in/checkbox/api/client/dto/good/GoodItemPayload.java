@@ -2,7 +2,6 @@ package ua.in.checkbox.api.client.dto.good;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 
 @Builder

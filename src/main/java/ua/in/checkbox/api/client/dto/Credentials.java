@@ -5,7 +5,8 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class DeliveryPayload
+public class Credentials
 {
-    private String email;
+    private String login;
+    private String password;
 }
