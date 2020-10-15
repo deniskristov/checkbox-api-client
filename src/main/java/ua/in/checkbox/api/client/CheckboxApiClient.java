@@ -94,6 +94,11 @@ public class CheckboxApiClient
         return getForObject(DetailedCashierModel.class, URI.create(apiPrefix + CASHIER_END_POINT + "/me"));
     }
 
+    public ReceiptModel findReceiptById(String id)
+    {
+        return getForObject(ReceiptModel.class, URI.create(apiPrefix + RECEIPTS_END_POINT + "/" + id));
+    }
+
     public ShiftWithCashierAndCashRegister findShiftById(String id)
     {
         return getForObject(ShiftWithCashierAndCashRegister.class, URI.create(apiPrefix + SHIFTS_END_POINT + "/" + id));

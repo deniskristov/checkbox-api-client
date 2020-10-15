@@ -35,7 +35,7 @@ public class ReceiptModel
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConstants.DATE_PATTERN)
     @JsonProperty("created_at")
     private Date createdAt;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConstants.DATE_NO_MILLIS_PATTERN)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConstants.DATE_PATTERN)
     @JsonProperty("updated_at")
     private Date updatedAt;
     private String barcode;
