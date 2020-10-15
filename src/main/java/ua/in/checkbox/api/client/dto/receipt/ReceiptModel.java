@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import ua.in.checkbox.api.client.dto.good.GoodItemModel;
+import ua.in.checkbox.api.client.dto.shift.ShiftWithCashierAndCashRegister;
 import ua.in.checkbox.api.client.utils.AppConstants;
 
 import java.util.Date;
@@ -47,6 +48,7 @@ public class ReceiptModel
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConstants.DATE_PATTERN)
     @JsonProperty("sent_dps_at")
     private Date sentDpsAt;
+    private ShiftWithCashierAndCashRegister shift;
 
     public enum TYPE
     {
