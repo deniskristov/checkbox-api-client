@@ -52,11 +52,11 @@ public class ReceiptModel
 
     public enum TYPE
     {
-        SELL,SERVICE_IN,SERVICE_OUT
+        SELL,SERVICE_IN,SERVICE_OUT,RETURN
     }
 
     public enum STATUS
     {
-        CREATED,DONE
+        CREATED,DONE,ERROR
     }
 }
