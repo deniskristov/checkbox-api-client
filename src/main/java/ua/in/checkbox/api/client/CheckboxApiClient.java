@@ -45,7 +45,7 @@ public class CheckboxApiClient
         this.password = password;
     }
 
-    public void authorize()
+    public void signIn()
     {
         try
         {
