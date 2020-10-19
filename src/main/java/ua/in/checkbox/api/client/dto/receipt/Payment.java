@@ -26,4 +26,7 @@ public class Payment
     {
         CARD,CASH
     }
+
+    public static final String LABEL_CASH = "Готiвка";
+    public static final String LABEL_CARD = "Картка";
 }

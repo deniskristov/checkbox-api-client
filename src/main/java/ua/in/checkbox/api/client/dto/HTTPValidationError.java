@@ -1,5 +1,6 @@
 package ua.in.checkbox.api.client.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.util.List;
@@ -11,6 +12,7 @@ public class HTTPValidationError
     private String message;
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class ValidationError
     {
         private List<String> loc;
