@@ -1,7 +1,10 @@
 package ua.in.checkbox.api.client.dto.receipt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
@@ -16,12 +19,11 @@ public class Payment
     private String label;
     @JsonProperty("card_mask")
     private String cardMask;
+    // Номер оплати
+    private Integer code;
 
     public enum TYPE
     {
         CARD,CASH
     }
-
-    public static final String LABEL_CASH = "Готiвка";
-    public static final String LABEL_CARD = "Картка";
 }
