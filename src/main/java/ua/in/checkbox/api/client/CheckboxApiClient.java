@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import ua.in.checkbox.api.client.dto.Bearer;
-import ua.in.checkbox.api.client.dto.Credentials;
-import ua.in.checkbox.api.client.dto.ErrorDetails;
-import ua.in.checkbox.api.client.dto.PaginatedResult;
+import ua.in.checkbox.api.client.dto.*;
 import ua.in.checkbox.api.client.dto.cashier.DetailedCashierModel;
 import ua.in.checkbox.api.client.dto.good.GoodModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptModel;
@@ -179,6 +176,15 @@ public class CheckboxApiClient
             if (response.statusCode() == successHttpCode)
             {
                 return mapper.readValue(response.body(), returnType);
+            }
+            else if (response.statusCode() == 422)
+            {
+                // Validation error
+                HTTPValidationError error = mapper.readValue(response.body(), HTTPValidationError.class);
+                throw CheckboxApiCallException.builder()
+                    .httpCode(response.statusCode())
+                    .validationError(error)
+                    .build();
             }
             else
             {
