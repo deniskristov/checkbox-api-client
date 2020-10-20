@@ -6,6 +6,7 @@ import lombok.Getter;
 import ua.in.checkbox.api.client.dto.DeliveryPayload;
 import ua.in.checkbox.api.client.dto.good.GoodItemPayload;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -20,4 +21,6 @@ public class ReceiptSellPayload
     private List<Payment> payments;
     private String footer;
     private String barcode;
+    @Builder.Default
+    private List<DiscountPayload> discounts = new ArrayList<>();
 }
