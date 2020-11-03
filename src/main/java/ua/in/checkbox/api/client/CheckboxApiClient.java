@@ -65,6 +65,15 @@ public class CheckboxApiClient
                 Bearer bearer = mapper.readValue(response.body(), Bearer.class);
                 token = bearer.getAccessToken();
             }
+            else if (response.statusCode() == 422)
+            {
+                // Validation error
+                HTTPValidationError error = mapper.readValue(response.body(), HTTPValidationError.class);
+                throw CheckboxApiCallException.builder()
+                    .httpCode(response.statusCode())
+                    .validationError(error)
+                    .build();
+            }
             else
             {
                 ErrorDetails error = mapper.readValue(response.body(), ErrorDetails.class);

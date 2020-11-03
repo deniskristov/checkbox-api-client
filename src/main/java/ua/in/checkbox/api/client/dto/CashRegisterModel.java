@@ -18,7 +18,8 @@ public class CashRegisterModel
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConstants.DATE_NO_MILLIS_PATTERN)
     @JsonProperty("created_at")
     private Date createdAt;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConstants.DATE_PATTERN)
-    @JsonProperty("updated_at")
-    private Date updatedAt;
+    // TODO uncomment after date format is fixed
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConstants.DATE_NO_MILLIS_PATTERN)
+//    @JsonProperty("updated_at")
+//    private Date updatedAt;
 }
