@@ -1,10 +1,12 @@
 package ua.in.checkbox.api.client.dto.report;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import ua.in.checkbox.api.client.dto.receipt.Payment;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportPaymentsModel
 {
     private String id;

@@ -1,6 +1,7 @@
 package ua.in.checkbox.api.client.dto.report;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import ua.in.checkbox.api.client.utils.AppConstants;
@@ -9,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportModel
 {
     private String id;
