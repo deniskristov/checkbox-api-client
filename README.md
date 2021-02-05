@@ -1,4 +1,4 @@
-# Checkbox APIs Client Library for Java
+# Checkbox REST API Client Library for Java
 
 This API Client is a wrapper around https://checkbox.in.ua/ REST API. Please see the [API documentation](https://dev-api.checkbox.in.ua/api/redoc) for more information.
 
