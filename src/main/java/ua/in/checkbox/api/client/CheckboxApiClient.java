@@ -26,10 +26,10 @@ import java.util.function.Function;
 public class CheckboxApiClient
 {
     private static final String API_PREFIX_TEMPLATE = "%s/api/v%d";
-    private static final String SHIFTS_END_POINT = "/shifts";
-    private static final String GOODS_END_POINT = "/goods";
-    private static final String CASHIER_END_POINT = "/cashier";
-    private static final String RECEIPTS_END_POINT = "/receipts";
+    private static final String SHIFTS_PATH = "/shifts";
+    private static final String GOODS_PATH = "/goods";
+    private static final String CASHIER_PATH = "/cashier";
+    private static final String RECEIPTS_PATH = "/receipts";
 
     private String token;
     private HttpClient httpClient = HttpClient.newHttpClient();
@@ -56,7 +56,7 @@ public class CheckboxApiClient
             HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(
                     mapper.writeValueAsString(credentials)))
-                .uri(URI.create(apiPrefix + CASHIER_END_POINT + "/signin"))
+                .uri(URI.create(apiPrefix + CASHIER_PATH + "/signin"))
                 .header("Content-Type", "application/json")
                 .build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -97,34 +97,34 @@ public class CheckboxApiClient
 
     public DetailedCashierModel me()
     {
-        return getForObject(DetailedCashierModel.class, URI.create(apiPrefix + CASHIER_END_POINT + "/me"));
+        return getForObject(DetailedCashierModel.class, URI.create(apiPrefix + CASHIER_PATH + "/me"));
     }
 
     public ReceiptModel findReceiptById(String id)
     {
-        return getForObject(ReceiptModel.class, URI.create(apiPrefix + RECEIPTS_END_POINT + "/" + id));
+        return getForObject(ReceiptModel.class, URI.create(apiPrefix + RECEIPTS_PATH + "/" + id));
     }
 
     public ShiftWithCashierAndCashRegister findShiftById(String id)
     {
-        return getForObject(ShiftWithCashierAndCashRegister.class, URI.create(apiPrefix + SHIFTS_END_POINT + "/" + id));
+        return getForObject(ShiftWithCashierAndCashRegister.class, URI.create(apiPrefix + SHIFTS_PATH + "/" + id));
     }
 
     public GoodModel findGoodById(String id)
     {
-        return getForObject(GoodModel.class, URI.create(apiPrefix + GOODS_END_POINT + "/" + id));
+        return getForObject(GoodModel.class, URI.create(apiPrefix + GOODS_PATH + "/" + id));
     }
 
     public ReceiptModel sell(ReceiptSellPayload receipt)
     {
         return postForObject(ReceiptModel.class, receipt,
-            URI.create(apiPrefix + RECEIPTS_END_POINT + "/sell"), HttpURLConnection.HTTP_CREATED);
+            URI.create(apiPrefix + RECEIPTS_PATH + "/sell"), HttpURLConnection.HTTP_CREATED);
     }
 
     public ReceiptModel service(ReceiptServicePayload receipt)
     {
         return postForObject(ReceiptModel.class, receipt,
-            URI.create(apiPrefix + RECEIPTS_END_POINT + "/service"), HttpURLConnection.HTTP_CREATED);
+            URI.create(apiPrefix + RECEIPTS_PATH + "/service"), HttpURLConnection.HTTP_CREATED);
     }
 
     public ShiftWithCashierAndCashRegister openShift(String xLicenseKey)
@@ -133,7 +133,7 @@ public class CheckboxApiClient
             ShiftWithCashierAndCashRegister.class,
             null,
             builder -> builder.header("X-License-Key", xLicenseKey),
-            URI.create(apiPrefix + SHIFTS_END_POINT),
+            URI.create(apiPrefix + SHIFTS_PATH),
             HttpURLConnection.HTTP_ACCEPTED);
     }
 
@@ -141,18 +141,18 @@ public class CheckboxApiClient
     {
         return postForObject(
             ShiftWithCashierAndCashRegister.class,
-            URI.create(apiPrefix + SHIFTS_END_POINT + "/close"),
+            URI.create(apiPrefix + SHIFTS_PATH + "/close"),
             HttpURLConnection.HTTP_ACCEPTED);
     }
 
     public ShiftWithCashRegisterModel getCurrentShift()
     {
-        return getForObject(ShiftWithCashRegisterModel.class, URI.create(apiPrefix + CASHIER_END_POINT + "/shift"));
+        return getForObject(ShiftWithCashRegisterModel.class, URI.create(apiPrefix + CASHIER_PATH + "/shift"));
     }
 
     public PaginatedResult<ShiftWithCashierAndCashRegister> getShifts()
     {
-        return getForObject(new TypeReference<>(){}, URI.create(apiPrefix + SHIFTS_END_POINT));
+        return getForObject(new TypeReference<>(){}, URI.create(apiPrefix + SHIFTS_PATH));
     }
 
     private <T> T postForObject(Class<T> returnType,  URI uri, int successHttpCode)
