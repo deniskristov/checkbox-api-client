@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import ua.in.checkbox.api.client.dto.*;
 import ua.in.checkbox.api.client.dto.cashier.DetailedCashierModel;
+import ua.in.checkbox.api.client.dto.cashier.SignatureTestResult;
 import ua.in.checkbox.api.client.dto.good.GoodModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptSellPayload;
@@ -98,6 +99,11 @@ public class CheckboxApiClient
     public DetailedCashierModel me()
     {
         return getForObject(DetailedCashierModel.class, URI.create(apiPrefix + CASHIER_PATH + "/me"));
+    }
+
+    public SignatureTestResult checkSignature()
+    {
+        return getForObject(SignatureTestResult.class, URI.create(apiPrefix + CASHIER_PATH + "/check-signature"));
     }
 
     public ReceiptModel findReceiptById(String id)

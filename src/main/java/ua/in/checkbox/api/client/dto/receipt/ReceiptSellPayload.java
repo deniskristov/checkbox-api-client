@@ -19,6 +19,7 @@ public class ReceiptSellPayload
     private List<GoodItemPayload> goods;
     private DeliveryPayload delivery;
     private List<Payment> payments;
+    private String header;
     private String footer;
     private String barcode;
     @Builder.Default
