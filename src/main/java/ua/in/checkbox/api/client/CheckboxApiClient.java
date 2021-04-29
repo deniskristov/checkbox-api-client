@@ -11,6 +11,7 @@ import ua.in.checkbox.api.client.dto.good.GoodModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptSellPayload;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptServicePayload;
+import ua.in.checkbox.api.client.dto.report.ReportModel;
 import ua.in.checkbox.api.client.dto.shift.ShiftWithCashRegisterModel;
 import ua.in.checkbox.api.client.dto.shift.ShiftWithCashierAndCashRegister;
 import ua.in.checkbox.api.client.utils.CheckboxApiCallException;
@@ -31,6 +32,7 @@ public class CheckboxApiClient
     private static final String GOODS_PATH = "/goods";
     private static final String CASHIER_PATH = "/cashier";
     private static final String RECEIPTS_PATH = "/receipts";
+    private static final String REPORTS_PATH = "/reports";
 
     private String token;
     private HttpClient httpClient = HttpClient.newHttpClient();
@@ -159,6 +161,11 @@ public class CheckboxApiClient
     public PaginatedResult<ShiftWithCashierAndCashRegister> getShifts()
     {
         return getForObject(new TypeReference<>(){}, URI.create(apiPrefix + SHIFTS_PATH));
+    }
+
+    public ReportModel findReportById(String id)
+    {
+        return getForObject(ReportModel.class, URI.create(apiPrefix + REPORTS_PATH + "/" + id));
     }
 
     private <T> T postForObject(Class<T> returnType,  URI uri, int successHttpCode)
