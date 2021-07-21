@@ -28,6 +28,6 @@ public class CashierModel
 
     public enum SIGNATURE_TYPE
     {
-        AGENT
+        AGENT,CLOUD_SIGNATURE
     }
 }
