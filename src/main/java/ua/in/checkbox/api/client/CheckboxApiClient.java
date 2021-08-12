@@ -3,6 +3,7 @@ package ua.in.checkbox.api.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.extern.slf4j.Slf4j;
 import ua.in.checkbox.api.client.dto.*;
 import ua.in.checkbox.api.client.dto.cashier.DetailedCashierModel;
@@ -15,6 +16,7 @@ import ua.in.checkbox.api.client.dto.report.ReportModel;
 import ua.in.checkbox.api.client.dto.shift.ShiftWithCashRegisterModel;
 import ua.in.checkbox.api.client.dto.shift.ShiftWithCashierAndCashRegister;
 import ua.in.checkbox.api.client.utils.CheckboxApiCallException;
+import ua.in.checkbox.api.client.utils.DateDeserializer;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -22,6 +24,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Date;
 import java.util.function.Function;
 
 @Slf4j
@@ -46,6 +49,9 @@ public class CheckboxApiClient
         apiPrefix = String.format(API_PREFIX_TEMPLATE, apiUrl, apiVersion);
         this.login = login;
         this.password = password;
+        SimpleModule dateModule = new SimpleModule();
+        dateModule.addDeserializer(Date.class, new DateDeserializer());
+        mapper.registerModule(dateModule);
     }
 
     public void signIn()
@@ -197,6 +203,7 @@ public class CheckboxApiClient
             HttpResponse<String> response = httpClient.send(request.build(), HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == successHttpCode)
             {
+                System.out.println(response.body());
                 return mapper.readValue(response.body(), returnType);
             }
             else if (response.statusCode() == 422)
@@ -230,10 +237,12 @@ public class CheckboxApiClient
         {
             try
             {
+                System.out.println("Response: " + response.body());
                 return mapper.readValue(response.body(), returnType);
             }
             catch (JsonProcessingException e)
             {
+                e.printStackTrace();
                 log.error("API call error", e);
                 throw CheckboxApiCallException.builder().build();
             }
