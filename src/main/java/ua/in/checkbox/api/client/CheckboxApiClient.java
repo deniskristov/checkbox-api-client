@@ -203,7 +203,6 @@ public class CheckboxApiClient
             HttpResponse<String> response = httpClient.send(request.build(), HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == successHttpCode)
             {
-                System.out.println(response.body());
                 return mapper.readValue(response.body(), returnType);
             }
             else if (response.statusCode() == 422)
@@ -237,7 +236,6 @@ public class CheckboxApiClient
         {
             try
             {
-                System.out.println("Response: " + response.body());
                 return mapper.readValue(response.body(), returnType);
             }
             catch (JsonProcessingException e)
