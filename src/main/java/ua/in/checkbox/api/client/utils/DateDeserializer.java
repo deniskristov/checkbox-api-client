@@ -6,15 +6,16 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 @Slf4j
 public class DateDeserializer extends StdDeserializer<Date>
 {
-    private static final SimpleDateFormat withMillis = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSX");
-    private static final SimpleDateFormat withoutMillis = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+    private static final DateTimeFormatter FORMATTER_WITH_MS
+        = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");
 
     public DateDeserializer()
     {
@@ -36,19 +37,23 @@ public class DateDeserializer extends StdDeserializer<Date>
         }
         try
         {
-            return withMillis.parse(dateString);
+            ZonedDateTime dateTime = ZonedDateTime.parse(dateString, FORMATTER_WITH_MS);
+            return java.util.Date
+                .from(dateTime.toInstant());
         }
-        catch (ParseException pe)
+        catch (DateTimeParseException e)
         {
             try
             {
-                return withoutMillis.parse(dateString);
+                ZonedDateTime dateTime = ZonedDateTime.parse(dateString, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                return java.util.Date
+                    .from(dateTime.toInstant());
             }
-            catch (ParseException pe1)
+            catch (Exception e1)
             {
                 String error = String.format("Unable to parse date '%s'", dateString);
-                log.error(error, pe1);
-                throw new RuntimeException(error, pe1);
+                log.error(error, e1);
+                throw new RuntimeException(error, e1);
             }
         }
         catch (Exception e)
