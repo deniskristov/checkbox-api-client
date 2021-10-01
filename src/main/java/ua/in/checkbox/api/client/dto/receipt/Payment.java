@@ -23,6 +23,12 @@ public class Payment
     private String cardMask;
     // Номер оплати
     private Integer code;
+    @JsonProperty("pawnshop_is_return")
+    private Boolean pawnshopIsReturn;
+    @JsonProperty("payment_system")
+    private String paymentSystem;
+    @JsonProperty("receipt_no")
+    private String receiptNo;
 
     public enum TYPE
     {

@@ -24,4 +24,15 @@ public class ReceiptSellPayload
     private String barcode;
     @Builder.Default
     private List<DiscountPayload> discounts = new ArrayList<>();
+    @JsonProperty("is_pawnshop")
+    private boolean pawnshop;
+
+    public static class ReceiptSellPayloadBuilder
+    {
+        public ReceiptSellPayloadBuilder forPawnshop()
+        {
+            this.pawnshop = true;
+            return this;
+        }
+    }
 }
