@@ -3,9 +3,11 @@ package ua.in.checkbox.api.client.dto.receipt;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 
+@ToString
 @Builder
 @Getter
 public class DiscountPayload

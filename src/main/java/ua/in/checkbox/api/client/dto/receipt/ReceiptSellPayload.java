@@ -3,12 +3,14 @@ package ua.in.checkbox.api.client.dto.receipt;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import ua.in.checkbox.api.client.dto.DeliveryPayload;
 import ua.in.checkbox.api.client.dto.good.GoodItemPayload;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@ToString
 @Builder
 @Getter
 public class ReceiptSellPayload

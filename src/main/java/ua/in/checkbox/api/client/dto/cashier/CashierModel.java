@@ -24,6 +24,6 @@ public class CashierModel
 
     public enum SIGNATURE_TYPE
     {
-        AGENT,CLOUD_SIGNATURE
+        AGENT,UKEY,DEPOSITSIGN,CLOUD_SIGNATURE,CLOUD_SIGNATURE_2,SMARTSIGN,TEST
     }
 }

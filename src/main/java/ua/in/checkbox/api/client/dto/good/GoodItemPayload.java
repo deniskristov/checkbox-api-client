@@ -3,7 +3,9 @@ package ua.in.checkbox.api.client.dto.good;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Builder
 @Getter
 public class GoodItemPayload
