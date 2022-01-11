@@ -8,7 +8,9 @@ import ua.in.checkbox.api.client.dto.DeliveryPayload;
 import ua.in.checkbox.api.client.dto.good.GoodItemPayload;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @ToString
 @Builder
@@ -28,6 +30,13 @@ public class ReceiptSellPayload
     private List<DiscountPayload> discounts = new ArrayList<>();
     @JsonProperty("is_pawnshop")
     private boolean pawnshop;
+    @JsonProperty("order_id")
+    private String orderId;
+    @JsonProperty("technical_return")
+    private boolean technicalReturn;
+    @Builder.Default
+    private Map<String,String> context = new HashMap();
+    private boolean rounding;
 
     public static class ReceiptSellPayloadBuilder
     {
