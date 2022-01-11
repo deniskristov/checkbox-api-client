@@ -1,5 +1,6 @@
 package ua.in.checkbox.api.client.dto.good;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import ua.in.checkbox.api.client.dto.tax.TaxModel;
@@ -8,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GoodModel
 {
     private String id;

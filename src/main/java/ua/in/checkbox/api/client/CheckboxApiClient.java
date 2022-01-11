@@ -19,8 +19,10 @@ import ua.in.checkbox.api.client.utils.CheckboxApiCallException;
 import ua.in.checkbox.api.client.utils.DateDeserializer;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -127,6 +129,22 @@ public class CheckboxApiClient
     public GoodModel findGoodById(String id)
     {
         return getForObject(GoodModel.class, URI.create(apiPrefix + GOODS_PATH + "/" + id));
+    }
+
+    /**
+     * @param query is just a word (or phrase) that will be matched against all GoodModel fields
+     * @return all GoodModels that contain query in any field
+     */
+    public PaginatedResult<GoodModel> findGoodByQuery(String query)
+    {
+        try
+        {
+            return getForObject(new TypeReference<>(){}, URI.create(apiPrefix + GOODS_PATH + "?query=" + URLEncoder.encode(query, "UTF-8")));
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            throw new IllegalStateException();
+        }
     }
 
     public ReceiptModel sell(ReceiptSellPayload receipt)

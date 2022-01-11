@@ -40,6 +40,15 @@ public class DateParsingTest
     }
 
     @Test
+    public void dateWithMsNoTimeZoneParsingTest() throws JsonProcessingException
+    {
+        String goodModelString = "{\"created_at\":\"2022-01-11T19:50:59.414481\",\"updated_at\":\"\"}";
+        GoodModel goodModel = MAPPER.readValue(goodModelString, GoodModel.class);
+        Assert.assertEquals("Tue Jan 11 19:50:59 EET 2022", goodModel.getCreatedAt().toString());
+        Assert.assertEquals(null, goodModel.getUpdatedAt());
+    }
+
+    @Test
     public void dateWithoutMsParsingTest() throws JsonProcessingException
     {
         String goodModelString = "{\"created_at\":\"2021-05-06T11:06:51+00:00\",\"updated_at\":\"\"}";
