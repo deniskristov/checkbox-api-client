@@ -20,7 +20,7 @@ Add to your pom.xml repository and dependency:
 <dependency>
     <groupId>ua.in.checkbox</groupId>
     <artifactId>api-client</artifactId>
-    <version>1.10.2</version>
+    <version>1.10.4</version>
 </dependency>
 ```
 
