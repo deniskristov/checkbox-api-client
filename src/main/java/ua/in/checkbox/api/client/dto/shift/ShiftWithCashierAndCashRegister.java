@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import ua.in.checkbox.api.client.dto.CashRegisterModel;
 import ua.in.checkbox.api.client.dto.cashier.CashierModel;
+import ua.in.checkbox.api.client.dto.cashregister.CashRegisterModel;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

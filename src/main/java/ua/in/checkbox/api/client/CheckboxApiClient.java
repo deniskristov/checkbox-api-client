@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import ua.in.checkbox.api.client.dto.*;
 import ua.in.checkbox.api.client.dto.cashier.DetailedCashierModel;
 import ua.in.checkbox.api.client.dto.cashier.SignatureTestResult;
+import ua.in.checkbox.api.client.dto.cashregister.DetailedCashRegisterModel;
 import ua.in.checkbox.api.client.dto.good.GoodModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptSellPayload;
@@ -38,6 +39,7 @@ public class CheckboxApiClient
     private static final String CASHIER_PATH = "/cashier";
     private static final String RECEIPTS_PATH = "/receipts";
     private static final String REPORTS_PATH = "/reports";
+    private static final String CASH_REGISTER_PATH = "/cash-registers";
 
     private String token;
     private HttpClient httpClient = HttpClient.newHttpClient();
@@ -119,6 +121,11 @@ public class CheckboxApiClient
     public ReceiptModel findReceiptById(String id)
     {
         return getForObject(ReceiptModel.class, URI.create(apiPrefix + RECEIPTS_PATH + "/" + id));
+    }
+
+    public DetailedCashRegisterModel findCashRegisterById(String id)
+    {
+        return getForObject(DetailedCashRegisterModel.class, URI.create(apiPrefix + CASH_REGISTER_PATH + "/" + id));
     }
 
     public ShiftWithCashierAndCashRegister findShiftById(String id)

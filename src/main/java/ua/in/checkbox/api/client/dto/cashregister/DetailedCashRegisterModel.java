@@ -1,4 +1,4 @@
-package ua.in.checkbox.api.client.dto;
+package ua.in.checkbox.api.client.dto.cashregister;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CashRegisterModel
+public class DetailedCashRegisterModel
 {
     private String id;
     @JsonProperty("fiscal_number")
@@ -17,4 +17,10 @@ public class CashRegisterModel
     private Date createdAt;
     @JsonProperty("updated_at")
     private Date updatedAt;
+    @JsonProperty("offline_mode")
+    private boolean offlineMode;
+    @JsonProperty("stay_offline")
+    private boolean stayOffline;
+    private String address;
+    private boolean active;
 }
