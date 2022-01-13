@@ -7,5 +7,6 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SignatureTestResult
 {
-    boolean online;
+    private boolean online;
+    private CashierModel.SIGNATURE_TYPE type;
 }

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import ua.in.checkbox.api.client.dto.*;
 import ua.in.checkbox.api.client.dto.cashier.DetailedCashierModel;
 import ua.in.checkbox.api.client.dto.cashier.SignatureTestResult;
+import ua.in.checkbox.api.client.dto.cashregister.CashRegisterInfo;
 import ua.in.checkbox.api.client.dto.cashregister.DetailedCashRegisterModel;
 import ua.in.checkbox.api.client.dto.good.GoodModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptModel;
@@ -121,6 +122,11 @@ public class CheckboxApiClient
     public ReceiptModel findReceiptById(String id)
     {
         return getForObject(ReceiptModel.class, URI.create(apiPrefix + RECEIPTS_PATH + "/" + id));
+    }
+
+    public CashRegisterInfo getCashRegisterInfo(String xLicenseKey)
+    {
+        return getForObject(CashRegisterInfo.class, URI.create(apiPrefix + CASH_REGISTER_PATH + "/info"), builder -> builder.header("X-License-Key", xLicenseKey));
     }
 
     public DetailedCashRegisterModel findCashRegisterById(String id)
@@ -272,6 +278,23 @@ public class CheckboxApiClient
         }, uri);
     }
 
+    private <T> T getForObject(Class<T> returnType, URI uri, Function<HttpRequest.Builder,HttpRequest.Builder> httpRequestCustomBuilder)
+    {
+        return getForObjectImpl(response ->
+        {
+            try
+            {
+                return mapper.readValue(response.body(), returnType);
+            }
+            catch (JsonProcessingException e)
+            {
+                e.printStackTrace();
+                log.error("API call error", e);
+                throw CheckboxApiCallException.builder().build();
+            }
+        }, uri, httpRequestCustomBuilder);
+    }
+
     private <T> T getForObject(TypeReference<T> returnType, URI uri)
     {
         return getForObjectImpl(response ->
@@ -290,14 +313,22 @@ public class CheckboxApiClient
 
     private <T> T getForObjectImpl(Function<HttpResponse<String>, T> responseFunction, URI uri)
     {
+        return getForObjectImpl(responseFunction, uri, null);
+    }
+
+    private <T> T getForObjectImpl(Function<HttpResponse<String>, T> responseFunction, URI uri,  Function<HttpRequest.Builder,HttpRequest.Builder> httpRequestCustomBuilder)
+    {
         try
         {
-            HttpRequest request = HttpRequest.newBuilder()
+            HttpRequest.Builder request = HttpRequest.newBuilder()
                 .GET()
                 .uri(uri)
-                .header("Authorization", "Bearer " + token)
-                .build();
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                .header("Authorization", "Bearer " + token);
+            if (httpRequestCustomBuilder != null)
+            {
+                request = httpRequestCustomBuilder.apply(request);
+            }
+            HttpResponse<String> response = httpClient.send(request.build(), HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == HttpURLConnection.HTTP_OK)
             {
                 return responseFunction.apply(response);
