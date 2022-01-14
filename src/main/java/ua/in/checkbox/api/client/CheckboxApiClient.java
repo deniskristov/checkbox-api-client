@@ -11,8 +11,8 @@ import ua.in.checkbox.api.client.dto.cashier.SignatureTestResult;
 import ua.in.checkbox.api.client.dto.cashregister.CashRegisterInfo;
 import ua.in.checkbox.api.client.dto.cashregister.DetailedCashRegisterModel;
 import ua.in.checkbox.api.client.dto.good.GoodModel;
-import ua.in.checkbox.api.client.dto.receipt.ReceiptModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptFilter;
+import ua.in.checkbox.api.client.dto.receipt.ReceiptModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptSellPayload;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptServicePayload;
 import ua.in.checkbox.api.client.dto.report.ReportModel;
@@ -23,17 +23,14 @@ import ua.in.checkbox.api.client.utils.CheckboxApiCallException;
 import ua.in.checkbox.api.client.utils.DateDeserializer;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.StringJoiner;
 import java.util.function.Function;
 
 @Slf4j
