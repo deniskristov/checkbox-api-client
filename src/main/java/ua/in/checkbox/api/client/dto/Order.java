@@ -18,6 +18,8 @@ public class Order
         this.desc = desc;
         if (offset < 0)
             throw new IllegalStateException("Offset cannot be < 0");
+        if (limit > 1000)
+            throw new IllegalStateException("Limit cannot be > 1000");
         this.offset = offset;
         if (limit > 0)
         {
