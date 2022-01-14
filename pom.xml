@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>ua.in.checkbox</groupId>
-    <artifactId>api-client</artifactId>
-    <version>1.10.5</version>
+    <artifactId>checkbox-api-client</artifactId>
+    <version>1.10.6</version>
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <slf4j-api.version>2.0.0-alpha1</slf4j-api.version>
         <jackson.version>2.11.2</jackson.version>
-        <lombok.version>1.18.12</lombok.version>
+        <lombok.version>1.18.22</lombok.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>

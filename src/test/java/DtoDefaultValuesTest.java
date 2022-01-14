@@ -2,6 +2,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import ua.in.checkbox.api.client.dto.Order;
 import ua.in.checkbox.api.client.dto.receipt.Payment;
+import ua.in.checkbox.api.client.dto.receipt.ReceiptFilter;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptSellPayload;
 import ua.in.checkbox.api.client.dto.shift.Shift;
 import ua.in.checkbox.api.client.dto.shift.ShiftFilter;
@@ -63,5 +64,35 @@ public class DtoDefaultValuesTest
             .build()
             .toString()
         );
+    }
+
+    @Test
+    public void receiptFilterTest()
+    {
+        Assert.assertEquals("", ReceiptFilter.empty().toString());
+        Assert.assertEquals("?fiscal_code=12344&serial=101&self_receipts=true", ReceiptFilter.builder()
+                .fiscalCode("12344")
+                .serial("101")
+                .selfReceipts(true)
+                .build()
+                .toString()
+        );
+        Assert.assertEquals("?desc=true&limit=20&offset=2", ReceiptFilter.builder()
+                .order(Order.builder()
+                        .desc(true).limit(20).offset(2).build())
+                .build()
+                .toString()
+        );
+        Assert.assertEquals("?desc=true&limit=20&offset=2&fiscal_code=12344&serial=101&self_receipts=true", ReceiptFilter.builder()
+                .fiscalCode("12344")
+                .serial("101")
+                .selfReceipts(true)
+                .order(Order.builder()
+                        .desc(true).limit(20).offset(2).build())
+                .build()
+                .toString()
+        );
+
+        // needs to add date tests and shiftIds/cashRegisterIds tests
     }
 }

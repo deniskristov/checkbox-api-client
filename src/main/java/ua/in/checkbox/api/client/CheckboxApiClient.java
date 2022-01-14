@@ -12,6 +12,7 @@ import ua.in.checkbox.api.client.dto.cashregister.CashRegisterInfo;
 import ua.in.checkbox.api.client.dto.cashregister.DetailedCashRegisterModel;
 import ua.in.checkbox.api.client.dto.good.GoodModel;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptModel;
+import ua.in.checkbox.api.client.dto.receipt.ReceiptFilter;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptSellPayload;
 import ua.in.checkbox.api.client.dto.receipt.ReceiptServicePayload;
 import ua.in.checkbox.api.client.dto.report.ReportModel;
@@ -29,7 +30,10 @@ import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.StringJoiner;
 import java.util.function.Function;
 
 @Slf4j
@@ -40,6 +44,7 @@ public class CheckboxApiClient
     private static final String GOODS_PATH = "/goods";
     private static final String CASHIER_PATH = "/cashier";
     private static final String RECEIPTS_PATH = "/receipts";
+    private static final String RECEIPTS_SEARCH_PATH = "/receipts/search";
     private static final String REPORTS_PATH = "/reports";
     private static final String CASH_REGISTER_PATH = "/cash-registers";
 
@@ -125,6 +130,13 @@ public class CheckboxApiClient
         return getForObject(ReceiptModel.class, URI.create(apiPrefix + RECEIPTS_PATH + "/" + id));
     }
 
+    public PaginatedResult<ReceiptModel> findReceipts(ReceiptFilter receiptFilter)
+    {
+        URI uri = URI.create(apiPrefix + RECEIPTS_SEARCH_PATH+receiptFilter.toString());
+        log.debug("uri="+uri.getQuery());
+        return getForObject(new TypeReference<>(){}, uri);
+    }
+
     public CashRegisterInfo getCashRegisterInfo(String xLicenseKey)
     {
         return getForObject(CashRegisterInfo.class, URI.create(apiPrefix + CASH_REGISTER_PATH + "/info"), builder -> builder.header("X-License-Key", xLicenseKey));
@@ -151,14 +163,7 @@ public class CheckboxApiClient
      */
     public PaginatedResult<GoodModel> findGoodByQuery(String query)
     {
-        try
-        {
-            return getForObject(new TypeReference<>(){}, URI.create(apiPrefix + GOODS_PATH + "?query=" + URLEncoder.encode(query, "UTF-8")));
-        }
-        catch (UnsupportedEncodingException e)
-        {
-            throw new IllegalStateException();
-        }
+        return getForObject(new TypeReference<>(){}, URI.create(apiPrefix + GOODS_PATH + "?query=" + URLEncoder.encode(query, StandardCharsets.UTF_8)));
     }
 
     public ReceiptModel sell(ReceiptSellPayload receipt)
