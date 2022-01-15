@@ -130,7 +130,6 @@ public class CheckboxApiClient
     public PaginatedResult<ReceiptModel> findReceipts(ReceiptFilter receiptFilter)
     {
         URI uri = URI.create(apiPrefix + RECEIPTS_SEARCH_PATH+receiptFilter.toString());
-        log.debug("uri="+uri.getQuery());
         return getForObject(new TypeReference<>(){}, uri);
     }
 

@@ -7,6 +7,8 @@ import ua.in.checkbox.api.client.dto.receipt.ReceiptSellPayload;
 import ua.in.checkbox.api.client.dto.shift.Shift;
 import ua.in.checkbox.api.client.dto.shift.ShiftFilter;
 
+import java.util.Arrays;
+
 public class DtoDefaultValuesTest
 {
     @Test
@@ -92,7 +94,20 @@ public class DtoDefaultValuesTest
                 .build()
                 .toString()
         );
+        Assert.assertEquals("?desc=true&limit=20&offset=2&fiscal_code=12344&serial=101&self_receipts=true" +
+                "&shift_id=A134480b-V123-4T96-g50c-18cab15bfcb3&shift_id=5b6b480b-R634-4d16-850c-48cab15bfcb3" +
+                "&cash_register_id=A134480b-V123-4T96-g50c-18cab15bfcb3&cash_register_id=5b6b480b-R634-4d16-850c-48cab15bfcb3", ReceiptFilter.builder()
+                .fiscalCode("12344")
+                .serial("101")
+                .selfReceipts(true)
+                .order(Order.builder()
+                        .desc(true).limit(20).offset(2).build())
+                .shiftIds(Arrays.asList("A134480b-V123-4T96-g50c-18cab15bfcb3","5b6b480b-R634-4d16-850c-48cab15bfcb3"))
+                .cashRegisterIds(Arrays.asList("A134480b-V123-4T96-g50c-18cab15bfcb3","5b6b480b-R634-4d16-850c-48cab15bfcb3"))
+                .build()
+                .toString()
+        );
 
-        // needs to add date tests and shiftIds/cashRegisterIds tests
+        // needs to add date tests
     }
 }
