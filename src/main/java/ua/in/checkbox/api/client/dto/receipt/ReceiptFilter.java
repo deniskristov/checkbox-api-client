@@ -1,14 +1,10 @@
 package ua.in.checkbox.api.client.dto.receipt;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.Singular;
 import ua.in.checkbox.api.client.dto.Order;
-import ua.in.checkbox.api.client.dto.shift.ShiftFilter;
 
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -22,10 +18,10 @@ public class ReceiptFilter {
     private String dateFrom;
     private String dateTo;
     private boolean selfReceipts;
-    @Builder.Default
-    private List<String> shiftIds = new ArrayList<>();
-    @Builder.Default
-    private List<String> cashRegisterIds = new ArrayList<>();
+    @Singular
+    private List<String> shiftIds;
+    @Singular
+    private List<String> cashRegisterIds;
 
     public static ReceiptFilter empty()
     {
@@ -35,7 +31,8 @@ public class ReceiptFilter {
     @Override
     public String toString()
     {
-        StringJoiner query = new StringJoiner("&");
+        StringJoiner query = new StringJoiner("&","?","");
+        query.setEmptyValue("");
         if (order != null)
             query.add(order.toString());
 
@@ -52,6 +49,6 @@ public class ReceiptFilter {
         shiftIds.forEach(si->query.add("shift_id="+si));
         cashRegisterIds.forEach(cri->query.add("cash_register_id="+cri));
 
-        return query.length()>0?"?"+query:"";
+        return query.toString();
     }
 }

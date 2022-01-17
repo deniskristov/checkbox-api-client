@@ -41,7 +41,7 @@ public class CheckboxApiClient
     private static final String GOODS_PATH = "/goods";
     private static final String CASHIER_PATH = "/cashier";
     private static final String RECEIPTS_PATH = "/receipts";
-    private static final String RECEIPTS_SEARCH_PATH = "/receipts/search";
+    private static final String RECEIPTS_SEARCH_PATH = RECEIPTS_PATH+"/search";
     private static final String REPORTS_PATH = "/reports";
     private static final String CASH_REGISTER_PATH = "/cash-registers";
 
