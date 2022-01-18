@@ -35,7 +35,7 @@ public class DateParsingTest
     {
         String goodModelString = "{\"created_at\":\"2021-08-02T17:14:52.244695+00:00\",\"updated_at\":\"\"}";
         GoodModel goodModel = MAPPER.readValue(goodModelString, GoodModel.class);
-        Assert.assertEquals("Mon Aug 02 20:14:52 EEST 2021", goodModel.getCreatedAt().toString());
+        Assert.assertEquals("Mon Aug 02 20:14:52 UTC 2021", goodModel.getCreatedAt().toString());
         Assert.assertEquals(null, goodModel.getUpdatedAt());
     }
 
@@ -44,7 +44,7 @@ public class DateParsingTest
     {
         String goodModelString = "{\"created_at\":\"2022-01-11T19:50:59.414481\",\"updated_at\":\"\"}";
         GoodModel goodModel = MAPPER.readValue(goodModelString, GoodModel.class);
-        Assert.assertEquals("Tue Jan 11 19:50:59 EET 2022", goodModel.getCreatedAt().toString());
+        Assert.assertEquals("Tue Jan 11 19:50:59 UTC 2022", goodModel.getCreatedAt().toString());
         Assert.assertEquals(null, goodModel.getUpdatedAt());
     }
 
@@ -53,7 +53,7 @@ public class DateParsingTest
     {
         String goodModelString = "{\"created_at\":\"2021-05-06T11:06:51+00:00\",\"updated_at\":\"\"}";
         GoodModel goodModel = MAPPER.readValue(goodModelString, GoodModel.class);
-        Assert.assertEquals("Thu May 06 14:06:51 EEST 2021", goodModel.getCreatedAt().toString());
+        Assert.assertEquals("Thu May 06 14:06:51 UTC 2021", goodModel.getCreatedAt().toString());
         Assert.assertEquals(null, goodModel.getUpdatedAt());
     }
 }
