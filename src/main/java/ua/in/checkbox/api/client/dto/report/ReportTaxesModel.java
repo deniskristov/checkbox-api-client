@@ -22,4 +22,7 @@ public class ReportTaxesModel
     private Integer returns_turnover;
     @JsonProperty("created_at")
     private Date createdAt;
+    private Integer value;
+    @JsonProperty("extra_value")
+    private Integer extraValue;
 }
