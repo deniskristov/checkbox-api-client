@@ -44,10 +44,18 @@ public class ReceiptModel
     @JsonProperty("sent_dps_at")
     private Date sentDpsAt;
     private ShiftWithCashierAndCashRegister shift;
+    @JsonProperty("order_id")
+    private String orderId;
+    @JsonProperty("tax_url")
+    private String taxUrl;
+    @JsonProperty("related_receipt_id")
+    private String relatedReceiptId;
+    @JsonProperty("control_number")
+    private String controlNumber;
 
     public enum TYPE
     {
-        SELL,SERVICE_IN,SERVICE_OUT,RETURN
+        SELL,SERVICE_IN,SERVICE_OUT,RETURN,SERVICE_CURRENCY,CURRENCY_EXCHANGE,PAWNSHOP
     }
 
     public enum STATUS
