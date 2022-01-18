@@ -33,7 +33,7 @@ public class DateParsingTest
     @Test
     public void dateWithMsParsingTest() throws JsonProcessingException
     {
-        String goodModelString = "{\"created_at\":\"2021-08-02T17:14:52.244695+00:00\",\"updated_at\":\"\"}";
+        String goodModelString = "{\"created_at\":\"2021-08-02T20:14:52.244695+00:00\",\"updated_at\":\"\"}";
         GoodModel goodModel = MAPPER.readValue(goodModelString, GoodModel.class);
         Assert.assertEquals("Mon Aug 02 20:14:52 UTC 2021", goodModel.getCreatedAt().toString());
         Assert.assertEquals(null, goodModel.getUpdatedAt());
@@ -51,7 +51,7 @@ public class DateParsingTest
     @Test
     public void dateWithoutMsParsingTest() throws JsonProcessingException
     {
-        String goodModelString = "{\"created_at\":\"2021-05-06T11:06:51+00:00\",\"updated_at\":\"\"}";
+        String goodModelString = "{\"created_at\":\"2021-05-06T14:06:51+00:00\",\"updated_at\":\"\"}";
         GoodModel goodModel = MAPPER.readValue(goodModelString, GoodModel.class);
         Assert.assertEquals("Thu May 06 14:06:51 UTC 2021", goodModel.getCreatedAt().toString());
         Assert.assertEquals(null, goodModel.getUpdatedAt());
