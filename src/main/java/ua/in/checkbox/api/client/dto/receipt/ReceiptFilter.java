@@ -12,7 +12,6 @@ import java.util.StringJoiner;
 @Getter
 public class ReceiptFilter {
     private String fiscalCode;
-    private String serial;
     private Order order;
     private String barcode;
     private String dateFrom;
@@ -38,8 +37,6 @@ public class ReceiptFilter {
 
         if(fiscalCode!=null)
             query.add("fiscal_code="+ fiscalCode);
-        if(serial!=null)
-            query.add("serial="+ serial);
         if(selfReceipts)
             query.add("self_receipts=true");
         if(dateFrom!=null)
