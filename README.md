@@ -21,7 +21,7 @@ Add to your pom.xml repository and dependency:
 <dependency>
     <groupId>ua.in.checkbox</groupId>
     <artifactId>checkbox-api-client</artifactId>
-    <version>1.10.5</version>
+    <version>{latest-version}</version>
 </dependency>
 ```
 
