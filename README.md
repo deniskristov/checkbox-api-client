@@ -1,4 +1,5 @@
 # Checkbox REST API Client Library for Java
+[![Java CI with Maven](https://github.com/deniskristov/checkbox-api-client/actions/workflows/maven.yml/badge.svg)](https://github.com/deniskristov/checkbox-api-client/actions/workflows/maven.yml)
 
 This API Client is a wrapper around https://checkbox.ua/ REST API. Please see the [API documentation](https://dev-api.checkbox.in.ua/api/redoc) for more information.
 
@@ -19,8 +20,8 @@ Add to your pom.xml repository and dependency:
 
 <dependency>
     <groupId>ua.in.checkbox</groupId>
-    <artifactId>api-client</artifactId>
-    <version>1.10.5</version>
+    <artifactId>checkbox-api-client</artifactId>
+    <version>{latest-version}</version>
 </dependency>
 ```
 
