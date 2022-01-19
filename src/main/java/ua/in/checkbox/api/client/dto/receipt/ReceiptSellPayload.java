@@ -37,6 +37,10 @@ public class ReceiptSellPayload
     @Builder.Default
     private Map<String,String> context = new HashMap();
     private boolean rounding;
+    @JsonProperty("related_receipt_id")
+    private String relatedReceiptId;
+    @JsonProperty("previous_receipt_id")
+    private String previousReceiptId;
 
     public static class ReceiptSellPayloadBuilder
     {
