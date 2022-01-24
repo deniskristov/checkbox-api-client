@@ -31,6 +31,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.StringJoiner;
 import java.util.function.Function;
 
 @Slf4j
@@ -217,14 +218,50 @@ public class CheckboxApiClient
         return getForString(URI.create(apiPrefix + REPORTS_PATH + "/" + id+"/xml"));
     }
 
+    public String getReceiptTextById(String id)
+    {
+        return getReceiptTextById(id);
+    }
+
     public String getReceiptTextById(String id,int width)
     {
         return getForString(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/text"+(width>=10 && width<=250?"?width="+width:"")));
     }
 
+    public String getReceiptHtmlById(String id)
+    {
+        return getReceiptHtmlById(id,false);
+    }
+
+    public String getReceiptHtmlById(String id,boolean isSimple)
+    {
+        return getForString(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/html"+(isSimple?"?simple=true":"")));
+    }
+
+    public byte[] getReceiptPngById(String id)
+    {
+        return getReceiptPngById(id,0,0);
+    }
+
+    public byte[] getReceiptPngById(String id,int charsCount, int paperWidth)
+    {
+        StringJoiner parameters = new StringJoiner("&","?","");
+        parameters.setEmptyValue("");
+        if(charsCount>=22 && charsCount<=100)
+            parameters.add("width="+charsCount);
+        if(paperWidth>=40 && paperWidth<=80)
+            parameters.add("paper_width="+paperWidth);
+        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/png"+parameters));
+    }
+
     public byte[] getReceiptPdfById(String id)
     {
         return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/pdf"));
+    }
+
+    public byte[] getReceiptQRCodeById(String id)
+    {
+        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/qrcode"));
     }
 
     private <T> T postForObject(Class<T> returnType,  URI uri, int successHttpCode)
