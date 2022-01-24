@@ -217,6 +217,16 @@ public class CheckboxApiClient
         return getForString(URI.create(apiPrefix + REPORTS_PATH + "/" + id+"/xml"));
     }
 
+    public String getReceiptTextById(String id,int width)
+    {
+        return getForString(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/text"+(width>=10 && width<=250?"?width="+width:"")));
+    }
+
+    public String getReceiptPdfById(String id)
+    {
+        return getForString(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/pdf"));
+    }
+
     private <T> T postForObject(Class<T> returnType,  URI uri, int successHttpCode)
     {
         return postForObject(returnType, null, null, uri, successHttpCode);
