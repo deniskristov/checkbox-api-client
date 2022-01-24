@@ -207,6 +207,16 @@ public class CheckboxApiClient
         return getForObject(ReportModel.class, URI.create(apiPrefix + REPORTS_PATH + "/" + id));
     }
 
+    public String getReportTextById(String id,int width)
+    {
+        return getForString(URI.create(apiPrefix + REPORTS_PATH + "/" + id+"/text"+(width>=10 && width<=250?"?width="+width:"")));
+    }
+
+    public String getReportXMLById(String id)
+    {
+        return getForString(URI.create(apiPrefix + REPORTS_PATH + "/" + id+"/xml"));
+    }
+
     private <T> T postForObject(Class<T> returnType,  URI uri, int successHttpCode)
     {
         return postForObject(returnType, null, null, uri, successHttpCode);
@@ -311,6 +321,11 @@ public class CheckboxApiClient
                 throw CheckboxApiCallException.builder().build();
             }
         }, uri);
+    }
+
+    private String getForString(URI uri)
+    {
+        return getForObjectImpl(HttpResponse::body, uri);
     }
 
     private <T> T getForObjectImpl(Function<HttpResponse<String>, T> responseFunction, URI uri)
