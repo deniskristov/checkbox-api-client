@@ -222,9 +222,9 @@ public class CheckboxApiClient
         return getForString(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/text"+(width>=10 && width<=250?"?width="+width:"")));
     }
 
-    public String getReceiptPdfById(String id)
+    public byte[] getReceiptPdfById(String id)
     {
-        return getForString(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/pdf"));
+        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/pdf"));
     }
 
     private <T> T postForObject(Class<T> returnType,  URI uri, int successHttpCode)
@@ -337,6 +337,10 @@ public class CheckboxApiClient
     {
         return getForObjectImpl(HttpResponse::body, uri);
     }
+    private byte[] getForBytes(URI uri)
+    {
+        return getForBytesImpl(httpResponse -> httpResponse.body(), uri,null);
+    }
 
     private <T> T getForObjectImpl(Function<HttpResponse<String>, T> responseFunction, URI uri)
     {
@@ -367,6 +371,39 @@ public class CheckboxApiClient
                     .httpCode(response.statusCode())
                     .error(error)
                     .build();
+            }
+        }
+        catch (InterruptedException|IOException e)
+        {
+            log.error("API call error", e);
+            throw CheckboxApiCallException.builder().build();
+        }
+    }
+
+    private <T> T getForBytesImpl(Function<HttpResponse<byte[]>, T> responseFunction, URI uri,  Function<HttpRequest.Builder,HttpRequest.Builder> httpRequestCustomBuilder)
+    {
+        try
+        {
+            HttpRequest.Builder request = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(uri)
+                    .header("Authorization", "Bearer " + token);
+            if (httpRequestCustomBuilder != null)
+            {
+                request = httpRequestCustomBuilder.apply(request);
+            }
+            HttpResponse<byte[]> response = httpClient.send(request.build(), HttpResponse.BodyHandlers.ofByteArray());
+            if (response.statusCode() == HttpURLConnection.HTTP_OK)
+            {
+                return responseFunction.apply(response);
+            }
+            else
+            {
+                ErrorDetails error = mapper.readValue(response.body(), ErrorDetails.class);
+                throw CheckboxApiCallException.builder()
+                        .httpCode(response.statusCode())
+                        .error(error)
+                        .build();
             }
         }
         catch (InterruptedException|IOException e)
