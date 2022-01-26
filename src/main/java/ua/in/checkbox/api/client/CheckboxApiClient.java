@@ -267,9 +267,9 @@ public class CheckboxApiClient
     {
         StringJoiner parameters = new StringJoiner("&","?","");
         parameters.setEmptyValue("");
-        if(charsCount >= MIN_CHARS_PNG_RECEIPT && MAX_CHARS_PNG_RECEIPT <= 100)
+        if(charsCount >= MIN_CHARS_PNG_RECEIPT && charsCount <= MAX_CHARS_PNG_RECEIPT)
             parameters.add("width="+charsCount);
-        if(paperWidth >= MIN_WIDTH_PNG_RECEIPT && MAX_WIDTH_PNG_RECEIPT <= 80)
+        if(paperWidth >= MIN_WIDTH_PNG_RECEIPT && paperWidth <= MAX_WIDTH_PNG_RECEIPT)
             parameters.add("paper_width=" + paperWidth);
         return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id + "/png" + parameters));
     }
