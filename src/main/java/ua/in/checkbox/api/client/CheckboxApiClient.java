@@ -31,6 +31,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.StringJoiner;
 import java.util.function.Function;
 
 @Slf4j
@@ -44,6 +45,13 @@ public class CheckboxApiClient
     private static final String RECEIPTS_SEARCH_PATH = RECEIPTS_PATH+"/search";
     private static final String REPORTS_PATH = "/reports";
     private static final String CASH_REGISTER_PATH = "/cash-registers";
+
+    private static final int MIN_WIDTH_TEXT = 10;
+    private static final int MAX_WIDTH_TEXT = 250;
+    private static final int MIN_CHARS_PNG_RECEIPT = 22;
+    private static final int MAX_CHARS_PNG_RECEIPT = 100;
+    private static final int MIN_WIDTH_PNG_RECEIPT = 40;
+    private static final int MAX_WIDTH_PNG_RECEIPT = 80;
 
     private String token;
     private HttpClient httpClient = HttpClient.newHttpClient();
@@ -207,6 +215,75 @@ public class CheckboxApiClient
         return getForObject(ReportModel.class, URI.create(apiPrefix + REPORTS_PATH + "/" + id));
     }
 
+    public String getReportTextById(String id,int width)
+    {
+        String widthParam =
+                width >= MIN_WIDTH_TEXT && width <= MAX_WIDTH_TEXT
+                        ? "?width=" + width
+                        : "";
+        return getForString(URI.create(apiPrefix + REPORTS_PATH + "/" + id + "/text" + widthParam));
+    }
+
+    public String getReportTextById(String id)
+    {
+        return getReportTextById(id, 0);
+    }
+
+    public String getReportXMLById(String id)
+    {
+        return getForString(URI.create(apiPrefix + REPORTS_PATH + "/" + id + "/xml"));
+    }
+
+    public String getReceiptHtmlById(String id)
+    {
+        return getReceiptHtmlById(id,false);
+    }
+
+    public String getReceiptHtmlById(String id,boolean isSimple)
+    {
+        return getForString(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+ "/html"+ (isSimple ? "?simple=true" : "" )));
+    }
+
+    public String getReceiptTextById(String id,int width)
+    {
+        String widthParam =
+                width >= MIN_WIDTH_TEXT && width <= MAX_WIDTH_TEXT
+                        ? "?width=" + width
+                        : "";
+        return getForString(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id + "/text" + widthParam));
+    }
+
+    public String getReceiptTextById(String id)
+    {
+        return getReceiptTextById(id, 0);
+    }
+
+    public byte[] getReceiptPngById(String id)
+    {
+        return getReceiptPngById(id,0,0);
+    }
+
+    public byte[] getReceiptPngById(String id,int charsCount, int paperWidth)
+    {
+        StringJoiner parameters = new StringJoiner("&","?","");
+        parameters.setEmptyValue("");
+        if(charsCount >= MIN_CHARS_PNG_RECEIPT && charsCount <= MAX_CHARS_PNG_RECEIPT)
+            parameters.add("width="+charsCount);
+        if(paperWidth >= MIN_WIDTH_PNG_RECEIPT && paperWidth <= MAX_WIDTH_PNG_RECEIPT)
+            parameters.add("paper_width=" + paperWidth);
+        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id + "/png" + parameters));
+    }
+
+    public byte[] getReceiptPdfById(String id)
+    {
+        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id + "/pdf"));
+    }
+
+    public byte[] getReceiptQRCodeById(String id)
+    {
+        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id + "/qrcode"));
+    }
+
     private <T> T postForObject(Class<T> returnType,  URI uri, int successHttpCode)
     {
         return postForObject(returnType, null, null, uri, successHttpCode);
@@ -222,13 +299,13 @@ public class CheckboxApiClient
         try
         {
             HttpRequest.BodyPublisher publisher = postData != null
-                ? HttpRequest.BodyPublishers.ofString(mapper.writeValueAsString(postData))
-                : HttpRequest.BodyPublishers.noBody();
+                    ? HttpRequest.BodyPublishers.ofString(mapper.writeValueAsString(postData))
+                    : HttpRequest.BodyPublishers.noBody();
             HttpRequest.Builder request = HttpRequest.newBuilder()
-                .POST(publisher)
-                .uri(uri)
-                .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + token);
+                    .POST(publisher)
+                    .uri(uri)
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + token);
             if (httpRequestCustomBuilder != null)
             {
                 request = httpRequestCustomBuilder.apply(request);
@@ -243,17 +320,17 @@ public class CheckboxApiClient
                 // Validation error
                 HTTPValidationError error = mapper.readValue(response.body(), HTTPValidationError.class);
                 throw CheckboxApiCallException.builder()
-                    .httpCode(response.statusCode())
-                    .validationError(error)
-                    .build();
+                        .httpCode(response.statusCode())
+                        .validationError(error)
+                        .build();
             }
             else
             {
                 ErrorDetails error = mapper.readValue(response.body(), ErrorDetails.class);
                 throw CheckboxApiCallException.builder()
-                    .httpCode(response.statusCode())
-                    .error(error)
-                    .build();
+                        .httpCode(response.statusCode())
+                        .error(error)
+                        .build();
             }
         }
         catch (InterruptedException|IOException e)
@@ -271,7 +348,7 @@ public class CheckboxApiClient
             {
                 return mapper.readValue(response.body(), returnType);
             }
-            catch (JsonProcessingException e)
+            catch (Exception e)
             {
                 e.printStackTrace();
                 log.error("API call error", e);
@@ -288,7 +365,7 @@ public class CheckboxApiClient
             {
                 return mapper.readValue(response.body(), returnType);
             }
-            catch (JsonProcessingException e)
+            catch (Exception e)
             {
                 e.printStackTrace();
                 log.error("API call error", e);
@@ -305,7 +382,7 @@ public class CheckboxApiClient
             {
                 return mapper.readValue(response.body(), returnType);
             }
-            catch (JsonProcessingException e)
+            catch (Exception e)
             {
                 log.error("API call error", e);
                 throw CheckboxApiCallException.builder().build();
@@ -313,24 +390,33 @@ public class CheckboxApiClient
         }, uri);
     }
 
-    private <T> T getForObjectImpl(Function<HttpResponse<String>, T> responseFunction, URI uri)
+    private String getForString(URI uri)
+    {
+        return getForObjectImpl(httpResponse -> new String(httpResponse.body(), StandardCharsets.UTF_8), uri);
+    }
+    private byte[] getForBytes(URI uri)
+    {
+        return getForObjectImpl(httpResponse -> httpResponse.body(), uri,null);
+    }
+
+    private <T> T getForObjectImpl(Function<HttpResponse<byte[]>, T> responseFunction, URI uri)
     {
         return getForObjectImpl(responseFunction, uri, null);
     }
 
-    private <T> T getForObjectImpl(Function<HttpResponse<String>, T> responseFunction, URI uri,  Function<HttpRequest.Builder,HttpRequest.Builder> httpRequestCustomBuilder)
+    private <T> T getForObjectImpl(Function<HttpResponse<byte[]>, T> responseFunction, URI uri,  Function<HttpRequest.Builder,HttpRequest.Builder> httpRequestCustomBuilder)
     {
         try
         {
             HttpRequest.Builder request = HttpRequest.newBuilder()
-                .GET()
-                .uri(uri)
-                .header("Authorization", "Bearer " + token);
+                    .GET()
+                    .uri(uri)
+                    .header("Authorization", "Bearer " + token);
             if (httpRequestCustomBuilder != null)
             {
                 request = httpRequestCustomBuilder.apply(request);
             }
-            HttpResponse<String> response = httpClient.send(request.build(), HttpResponse.BodyHandlers.ofString());
+            HttpResponse<byte[]> response = httpClient.send(request.build(), HttpResponse.BodyHandlers.ofByteArray());
             if (response.statusCode() == HttpURLConnection.HTTP_OK)
             {
                 return responseFunction.apply(response);
@@ -339,9 +425,9 @@ public class CheckboxApiClient
             {
                 ErrorDetails error = mapper.readValue(response.body(), ErrorDetails.class);
                 throw CheckboxApiCallException.builder()
-                    .httpCode(response.statusCode())
-                    .error(error)
-                    .build();
+                        .httpCode(response.statusCode())
+                        .error(error)
+                        .build();
             }
         }
         catch (InterruptedException|IOException e)

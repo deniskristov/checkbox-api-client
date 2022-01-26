@@ -30,7 +30,7 @@ public class Payment
 
     public enum TYPE
     {
-        CASHLESS,CASH,CARD
+        CASHLESS,CASH
     }
 
     public static final String LABEL_CASH = "Готiвка";
