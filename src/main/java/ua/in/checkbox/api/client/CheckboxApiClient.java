@@ -46,6 +46,13 @@ public class CheckboxApiClient
     private static final String REPORTS_PATH = "/reports";
     private static final String CASH_REGISTER_PATH = "/cash-registers";
 
+    private static final int MIN_WIDTH_TEXT = 10;
+    private static final int MAX_WIDTH_TEXT = 250;
+    private static final int MIN_CHARS_PNG_RECEIPT = 22;
+    private static final int MAX_CHARS_PNG_RECEIPT = 100;
+    private static final int MIN_WIDTH_PNG_RECEIPT = 40;
+    private static final int MAX_WIDTH_PNG_RECEIPT = 80;
+
     private String token;
     private HttpClient httpClient = HttpClient.newHttpClient();
     private final String apiPrefix;
@@ -210,22 +217,21 @@ public class CheckboxApiClient
 
     public String getReportTextById(String id,int width)
     {
-        return getForString(URI.create(apiPrefix + REPORTS_PATH + "/" + id+"/text"+(width>=10 && width<=250?"?width="+width:"")));
+        String widthParam =
+                width >= MIN_WIDTH_TEXT && width <= MAX_WIDTH_TEXT
+                        ? "?width=" + width
+                        : "";
+        return getForString(URI.create(apiPrefix + REPORTS_PATH + "/" + id + "/text" + widthParam));
+    }
+
+    public String getReportTextById(String id)
+    {
+        return getReportTextById(id, 0);
     }
 
     public String getReportXMLById(String id)
     {
         return getForString(URI.create(apiPrefix + REPORTS_PATH + "/" + id+"/xml"));
-    }
-
-    public String getReceiptTextById(String id)
-    {
-        return getReceiptTextById(id);
-    }
-
-    public String getReceiptTextById(String id,int width)
-    {
-        return getForString(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/text"+(width>=10 && width<=250?"?width="+width:"")));
     }
 
     public String getReceiptHtmlById(String id)
@@ -238,6 +244,20 @@ public class CheckboxApiClient
         return getForString(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/html"+(isSimple?"?simple=true":"")));
     }
 
+    public String getReceiptTextById(String id,int width)
+    {
+        String widthParam =
+                width >= MIN_WIDTH_TEXT && width <= MAX_WIDTH_TEXT
+                        ? "?width=" + width
+                        : "";
+        return getForString(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id + "/text" + widthParam));
+    }
+
+    public String getReceiptTextById(String id)
+    {
+        return getReceiptTextById(id, 0);
+    }
+
     public byte[] getReceiptPngById(String id)
     {
         return getReceiptPngById(id,0,0);
@@ -247,9 +267,9 @@ public class CheckboxApiClient
     {
         StringJoiner parameters = new StringJoiner("&","?","");
         parameters.setEmptyValue("");
-        if(charsCount>=22 && charsCount<=100)
+        if(charsCount>=MIN_CHARS_PNG_RECEIPT && MAX_CHARS_PNG_RECEIPT<=100)
             parameters.add("width="+charsCount);
-        if(paperWidth>=40 && paperWidth<=80)
+        if(paperWidth>=MIN_WIDTH_PNG_RECEIPT && MAX_WIDTH_PNG_RECEIPT<=80)
             parameters.add("paper_width="+paperWidth);
         return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/png"+parameters));
     }
