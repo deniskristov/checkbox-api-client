@@ -231,7 +231,7 @@ public class CheckboxApiClient
 
     public String getReportXMLById(String id)
     {
-        return getForString(URI.create(apiPrefix + REPORTS_PATH + "/" + id+"/xml"));
+        return getForString(URI.create(apiPrefix + REPORTS_PATH + "/" + id + "/xml"));
     }
 
     public String getReceiptHtmlById(String id)
@@ -241,7 +241,7 @@ public class CheckboxApiClient
 
     public String getReceiptHtmlById(String id,boolean isSimple)
     {
-        return getForString(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/html"+(isSimple?"?simple=true":"")));
+        return getForString(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+ "/html"+ (isSimple ? "?simple=true" : "" )));
     }
 
     public String getReceiptTextById(String id,int width)
@@ -267,21 +267,21 @@ public class CheckboxApiClient
     {
         StringJoiner parameters = new StringJoiner("&","?","");
         parameters.setEmptyValue("");
-        if(charsCount>=MIN_CHARS_PNG_RECEIPT && MAX_CHARS_PNG_RECEIPT<=100)
+        if(charsCount >= MIN_CHARS_PNG_RECEIPT && MAX_CHARS_PNG_RECEIPT <= 100)
             parameters.add("width="+charsCount);
-        if(paperWidth>=MIN_WIDTH_PNG_RECEIPT && MAX_WIDTH_PNG_RECEIPT<=80)
-            parameters.add("paper_width="+paperWidth);
-        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/png"+parameters));
+        if(paperWidth >= MIN_WIDTH_PNG_RECEIPT && MAX_WIDTH_PNG_RECEIPT <= 80)
+            parameters.add("paper_width=" + paperWidth);
+        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id + "/png"+parameters));
     }
 
     public byte[] getReceiptPdfById(String id)
     {
-        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/pdf"));
+        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id + "/pdf"));
     }
 
     public byte[] getReceiptQRCodeById(String id)
     {
-        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id+"/qrcode"));
+        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id + "/qrcode"));
     }
 
     private <T> T postForObject(Class<T> returnType,  URI uri, int successHttpCode)
