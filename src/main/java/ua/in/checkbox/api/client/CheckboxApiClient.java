@@ -271,7 +271,7 @@ public class CheckboxApiClient
             parameters.add("width="+charsCount);
         if(paperWidth >= MIN_WIDTH_PNG_RECEIPT && MAX_WIDTH_PNG_RECEIPT <= 80)
             parameters.add("paper_width=" + paperWidth);
-        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id + "/png"+parameters));
+        return getForBytes(URI.create(apiPrefix + RECEIPTS_PATH + "/" + id + "/png" + parameters));
     }
 
     public byte[] getReceiptPdfById(String id)
@@ -299,13 +299,13 @@ public class CheckboxApiClient
         try
         {
             HttpRequest.BodyPublisher publisher = postData != null
-                ? HttpRequest.BodyPublishers.ofString(mapper.writeValueAsString(postData))
-                : HttpRequest.BodyPublishers.noBody();
+                    ? HttpRequest.BodyPublishers.ofString(mapper.writeValueAsString(postData))
+                    : HttpRequest.BodyPublishers.noBody();
             HttpRequest.Builder request = HttpRequest.newBuilder()
-                .POST(publisher)
-                .uri(uri)
-                .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + token);
+                    .POST(publisher)
+                    .uri(uri)
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + token);
             if (httpRequestCustomBuilder != null)
             {
                 request = httpRequestCustomBuilder.apply(request);
@@ -320,17 +320,17 @@ public class CheckboxApiClient
                 // Validation error
                 HTTPValidationError error = mapper.readValue(response.body(), HTTPValidationError.class);
                 throw CheckboxApiCallException.builder()
-                    .httpCode(response.statusCode())
-                    .validationError(error)
-                    .build();
+                        .httpCode(response.statusCode())
+                        .validationError(error)
+                        .build();
             }
             else
             {
                 ErrorDetails error = mapper.readValue(response.body(), ErrorDetails.class);
                 throw CheckboxApiCallException.builder()
-                    .httpCode(response.statusCode())
-                    .error(error)
-                    .build();
+                        .httpCode(response.statusCode())
+                        .error(error)
+                        .build();
             }
         }
         catch (InterruptedException|IOException e)
@@ -348,7 +348,7 @@ public class CheckboxApiClient
             {
                 return mapper.readValue(response.body(), returnType);
             }
-            catch (JsonProcessingException e)
+            catch (Exception e)
             {
                 e.printStackTrace();
                 log.error("API call error", e);
@@ -365,7 +365,7 @@ public class CheckboxApiClient
             {
                 return mapper.readValue(response.body(), returnType);
             }
-            catch (JsonProcessingException e)
+            catch (Exception e)
             {
                 e.printStackTrace();
                 log.error("API call error", e);
@@ -382,7 +382,7 @@ public class CheckboxApiClient
             {
                 return mapper.readValue(response.body(), returnType);
             }
-            catch (JsonProcessingException e)
+            catch (Exception e)
             {
                 log.error("API call error", e);
                 throw CheckboxApiCallException.builder().build();
@@ -392,52 +392,19 @@ public class CheckboxApiClient
 
     private String getForString(URI uri)
     {
-        return getForObjectImpl(HttpResponse::body, uri);
+        return getForObjectImpl(httpResponse -> new String(httpResponse.body(), StandardCharsets.UTF_8), uri);
     }
     private byte[] getForBytes(URI uri)
     {
-        return getForBytesImpl(httpResponse -> httpResponse.body(), uri,null);
+        return getForObjectImpl(httpResponse -> httpResponse.body(), uri,null);
     }
 
-    private <T> T getForObjectImpl(Function<HttpResponse<String>, T> responseFunction, URI uri)
+    private <T> T getForObjectImpl(Function<HttpResponse<byte[]>, T> responseFunction, URI uri)
     {
         return getForObjectImpl(responseFunction, uri, null);
     }
 
-    private <T> T getForObjectImpl(Function<HttpResponse<String>, T> responseFunction, URI uri,  Function<HttpRequest.Builder,HttpRequest.Builder> httpRequestCustomBuilder)
-    {
-        try
-        {
-            HttpRequest.Builder request = HttpRequest.newBuilder()
-                .GET()
-                .uri(uri)
-                .header("Authorization", "Bearer " + token);
-            if (httpRequestCustomBuilder != null)
-            {
-                request = httpRequestCustomBuilder.apply(request);
-            }
-            HttpResponse<String> response = httpClient.send(request.build(), HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() == HttpURLConnection.HTTP_OK)
-            {
-                return responseFunction.apply(response);
-            }
-            else
-            {
-                ErrorDetails error = mapper.readValue(response.body(), ErrorDetails.class);
-                throw CheckboxApiCallException.builder()
-                    .httpCode(response.statusCode())
-                    .error(error)
-                    .build();
-            }
-        }
-        catch (InterruptedException|IOException e)
-        {
-            log.error("API call error", e);
-            throw CheckboxApiCallException.builder().build();
-        }
-    }
-
-    private <T> T getForBytesImpl(Function<HttpResponse<byte[]>, T> responseFunction, URI uri,  Function<HttpRequest.Builder,HttpRequest.Builder> httpRequestCustomBuilder)
+    private <T> T getForObjectImpl(Function<HttpResponse<byte[]>, T> responseFunction, URI uri,  Function<HttpRequest.Builder,HttpRequest.Builder> httpRequestCustomBuilder)
     {
         try
         {
