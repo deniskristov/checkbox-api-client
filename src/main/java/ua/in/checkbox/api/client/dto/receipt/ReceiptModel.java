@@ -2,12 +2,11 @@ package ua.in.checkbox.api.client.dto.receipt;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
+import java.util.List;
 import lombok.Data;
 import ua.in.checkbox.api.client.dto.good.GoodItemModel;
 import ua.in.checkbox.api.client.dto.shift.ShiftWithCashierAndCashRegister;
-
-import java.util.Date;
-import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -60,6 +59,6 @@ public class ReceiptModel
 
     public enum STATUS
     {
-        CREATED,DONE,ERROR
+        CREATED,DONE,ERROR,CANCELLED
     }
 }
