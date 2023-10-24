@@ -7,5 +7,6 @@ import lombok.Getter;
 @Getter
 public class ReceiptServicePayload
 {
+    private String id;
     private Payment payment;
 }

@@ -1,22 +1,22 @@
 package ua.in.checkbox.api.client.dto.receipt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import ua.in.checkbox.api.client.dto.DeliveryPayload;
 import ua.in.checkbox.api.client.dto.good.GoodItemPayload;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @ToString
 @Builder
 @Getter
 public class ReceiptSellPayload
 {
+    private String  id;
     @JsonProperty("cashier_name")
     private String cashierName;
     private String departament;
