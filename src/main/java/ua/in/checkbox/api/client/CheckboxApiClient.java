@@ -1,11 +1,25 @@
 package ua.in.checkbox.api.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.StringJoiner;
+import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
-import ua.in.checkbox.api.client.dto.*;
+import ua.in.checkbox.api.client.dto.Bearer;
+import ua.in.checkbox.api.client.dto.Credentials;
+import ua.in.checkbox.api.client.dto.ErrorDetails;
+import ua.in.checkbox.api.client.dto.HTTPValidationError;
+import ua.in.checkbox.api.client.dto.PaginatedResult;
 import ua.in.checkbox.api.client.dto.cashier.DetailedCashierModel;
 import ua.in.checkbox.api.client.dto.cashier.SignatureTestResult;
 import ua.in.checkbox.api.client.dto.cashregister.CashRegisterInfo;
@@ -21,18 +35,6 @@ import ua.in.checkbox.api.client.dto.shift.ShiftWithCashRegisterModel;
 import ua.in.checkbox.api.client.dto.shift.ShiftWithCashierAndCashRegister;
 import ua.in.checkbox.api.client.utils.CheckboxApiCallException;
 import ua.in.checkbox.api.client.utils.DateDeserializer;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.StringJoiner;
-import java.util.function.Function;
 
 @Slf4j
 public class CheckboxApiClient
@@ -213,6 +215,11 @@ public class CheckboxApiClient
     public ReportModel findReportById(String id)
     {
         return getForObject(ReportModel.class, URI.create(apiPrefix + REPORTS_PATH + "/" + id));
+    }
+
+    public ReportModel buildReport()
+    {
+        return postForObject(ReportModel.class, URI.create(apiPrefix + REPORTS_PATH), HttpURLConnection.HTTP_CREATED);
     }
 
     public String getReportTextById(String id,int width)
