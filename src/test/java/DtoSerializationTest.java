@@ -11,7 +11,7 @@ public class DtoSerializationTest
     @Test
     public void receiptSellPayloadTest() throws JsonProcessingException
     {
-        String sellPayload = "{\"departament\":null,\"goods\":null,\"delivery\":null,\"payments\":null,\"header\":null,\"footer\":null,\"barcode\":null,\"discounts\":[],\"context\":{\"property2\":\"value2\",\"property1\":\"value1\"},\"rounding\":false,\"cashier_name\":null,\"is_pawnshop\":false,\"order_id\":null,\"technical_return\":false,\"related_receipt_id\":null,\"previous_receipt_id\":null}";
+        String sellPayload = "{\"id\":null,\"departament\":null,\"goods\":null,\"delivery\":null,\"payments\":null,\"header\":null,\"footer\":null,\"barcode\":null,\"discounts\":[],\"context\":{\"property2\":\"value2\",\"property1\":\"value1\"},\"rounding\":false,\"cashier_name\":null,\"is_pawnshop\":false,\"order_id\":null,\"technical_return\":false,\"related_receipt_id\":null,\"previous_receipt_id\":null}";
         ReceiptSellPayload receiptSellPayload = ReceiptSellPayload.builder().build();
         receiptSellPayload.getContext().put("property1", "value1");
         receiptSellPayload.getContext().put("property2", "value2");
