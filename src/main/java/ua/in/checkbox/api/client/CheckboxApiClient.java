@@ -60,13 +60,27 @@ public class CheckboxApiClient
     private final String apiPrefix;
     private final String login;
     private final String password;
+    private final String integrationName;
     private ObjectMapper mapper = new ObjectMapper();
 
+    @Deprecated
     public CheckboxApiClient(String login, String password, String apiUrl, int apiVersion)
     {
         apiPrefix = String.format(API_PREFIX_TEMPLATE, apiUrl, apiVersion);
         this.login = login;
         this.password = password;
+        SimpleModule dateModule = new SimpleModule();
+        dateModule.addDeserializer(Date.class, new DateDeserializer());
+        mapper.registerModule(dateModule);
+        this.integrationName = "";
+    }
+
+    public CheckboxApiClient(String login, String password, String apiUrl, String integrationName, int apiVersion)
+    {
+        apiPrefix = String.format(API_PREFIX_TEMPLATE, apiUrl, apiVersion);
+        this.login = login;
+        this.password = password;
+        this.integrationName = integrationName;
         SimpleModule dateModule = new SimpleModule();
         dateModule.addDeserializer(Date.class, new DateDeserializer());
         mapper.registerModule(dateModule);
@@ -85,6 +99,7 @@ public class CheckboxApiClient
                     mapper.writeValueAsString(credentials)))
                 .uri(URI.create(apiPrefix + CASHIER_PATH + "/signin"))
                 .header("Content-Type", "application/json")
+                .header("X-Client-Name", integrationName)
                 .build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == HttpURLConnection.HTTP_OK)
@@ -312,6 +327,7 @@ public class CheckboxApiClient
                     .POST(publisher)
                     .uri(uri)
                     .header("Content-Type", "application/json")
+                    .header("X-Client-Name", integrationName)
                     .header("Authorization", "Bearer " + token);
             if (httpRequestCustomBuilder != null)
             {
@@ -418,6 +434,7 @@ public class CheckboxApiClient
             HttpRequest.Builder request = HttpRequest.newBuilder()
                     .GET()
                     .uri(uri)
+                    .header("X-Client-Name", integrationName)
                     .header("Authorization", "Bearer " + token);
             if (httpRequestCustomBuilder != null)
             {

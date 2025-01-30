@@ -31,6 +31,7 @@ CheckboxApiClient client = new CheckboxApiClient(
     "login",
     "password",
     "https://dev-api.checkbox.in.ua",
+    "X-Client-Name",
     apiVersion);
 client.signIn();
 ShiftWithCashierAndCashRegister shift = client.openShift("X-License-Key");
