@@ -11,6 +11,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Date;
 import java.util.StringJoiner;
 import java.util.function.Function;
@@ -56,7 +57,7 @@ public class CheckboxApiClient
     private static final int MAX_WIDTH_PNG_RECEIPT = 80;
 
     private String token;
-    private HttpClient httpClient = HttpClient.newHttpClient();
+    private HttpClient httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(60)).build();
     private final String apiPrefix;
     private final String login;
     private final String password;
@@ -373,7 +374,6 @@ public class CheckboxApiClient
             }
             catch (Exception e)
             {
-                e.printStackTrace();
                 log.error("API call error", e);
                 throw CheckboxApiCallException.builder().build();
             }
@@ -384,14 +384,14 @@ public class CheckboxApiClient
     {
         return getForObjectImpl(response ->
         {
+            byte[] body = response.body();
             try
             {
-                return mapper.readValue(response.body(), returnType);
+                return mapper.readValue(body, returnType);
             }
             catch (Exception e)
             {
-                e.printStackTrace();
-                log.error("API call error", e);
+                log.error("API call error, response body {}", new String(body), e);
                 throw CheckboxApiCallException.builder().build();
             }
         }, uri, httpRequestCustomBuilder);
@@ -434,6 +434,7 @@ public class CheckboxApiClient
             HttpRequest.Builder request = HttpRequest.newBuilder()
                     .GET()
                     .uri(uri)
+                    .timeout(Duration.ofSeconds(20))
                     .header("X-Client-Name", integrationName)
                     .header("Authorization", "Bearer " + token);
             if (httpRequestCustomBuilder != null)
