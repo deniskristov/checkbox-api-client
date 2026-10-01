@@ -38,4 +38,5 @@ public class Payment
     public static final String LABEL_NOVA_PAY = "Платіж через інтегратора NovaPay";
     public static final String LABEL_ROZETKA_PAY = "Платіж через інтегратора RozetkaPay";
     public static final String LABEL_LIQ_PAY = "Платіж через інтегратора LiqPay";
+    public static final String LABEL_PLATON = "Платіж через інтегратора Platon";
 }
